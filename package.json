@@ -23,6 +23,13 @@
     "directories": {
       "output": "dist_apps"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "TahaZahit",
+        "repo": "dassh"
+      }
+    ],
     "files": [
       "dist/**",
       "dist-electron/**",

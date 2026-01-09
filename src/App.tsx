@@ -183,7 +183,7 @@ function App() {
   }, [])
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${window.navigator.userAgent.includes('Mac') ? 'is-mac' : 'is-not-mac'}`}>
       {/* Header / Toolbar */}
       <header className="app-header draggable">
         <div className="header-left">

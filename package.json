@@ -41,6 +41,20 @@
         "dmg"
       ],
       "icon": "public/logo-black.png"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/logo-black.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "public/logo-black.png",
+      "category": "Development"
     }
   },
   "dependencies": {

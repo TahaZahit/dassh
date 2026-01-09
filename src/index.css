@@ -97,11 +97,15 @@ button {
   height: 40px;
   /* Reduced to better align with macOS traffic lights */
   /* Add padding for macOS traffic lights (standard is ~80px) */
-  padding: 0 16px 0 76px;
+  padding: 0 16px;
   background-color: var(--bg-app);
   border-bottom: 1px solid var(--border-subtle);
   -webkit-app-region: drag;
   /* Electron drag */
+}
+
+.is-mac .app-header {
+  padding-left: 76px;
 }
 
 .header-left {

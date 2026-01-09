@@ -1,8 +1,14 @@
+<p align="center">
+  <img src="public/logo-black.png" height="80" alt="DASSH Logo" />
+</p>
+
 # DASSH
 
 **DASSH** is a premium, modern SSH server management application and terminal orchestrator built with Electron and React. Designed for developers and system administrators who need a high-performance, visually stunning workspace for managing multiple remote sessions.
 
-![GitHub last commit](https://img.shields.io/github/last-commit/apx/dassh?style=flat-square&color=3b82f6)
+![DASSH Screenshot](screenshot.png)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/TahaZahit/dassh?style=flat-square&color=3b82f6)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
 ---

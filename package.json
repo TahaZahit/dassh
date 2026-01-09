@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Premium SSH terminal orchestrator with multi-grid and private key support",
-  "author": "Taha Zahit Hakyemez <taha.zahit@kivierp.com.tr>",
+  "author": "Taha Zahit Hakyemez <tahazahit@gmail.com>",
   "main": "dist-electron/main.js",
   "repository": {
     "type": "git",

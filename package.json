@@ -1,0 +1,71 @@
+{
+  "name": "dassh",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Premium SSH terminal orchestrator with multi-grid and private key support",
+  "author": "apx",
+  "main": "dist-electron/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apx/dassh.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "dist": "npm run build && electron-builder",
+    "test": "vitest",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "build": {
+    "appId": "com.apx.dassh",
+    "productName": "DASSH",
+    "directories": {
+      "output": "dist_apps"
+    },
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg"
+      ],
+      "icon": "public/logo-black.png"
+    }
+  },
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "ssh2": "^1.17.0",
+    "uuid": "^13.0.0",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@types/node": "^24.10.4",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@types/ssh2": "^1.15.5",
+    "@vitejs/plugin-react": "^5.1.1",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.4.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "jsdom": "^27.4.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "vitest": "^4.0.16"
+  }
+}

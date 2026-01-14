@@ -17,6 +17,7 @@ export function SftpPanel({ terminalId, onClose }: SftpPanelProps) {
     const [path, setPath] = useState('.')
     const [files, setFiles] = useState<SftpFile[]>([])
     const [loading, setLoading] = useState(false)
+    const [transferring, setTransferring] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [contextMenu, setContextMenu] = useState<{ x: number, y: number, file: SftpFile } | null>(null)
     const dropRef = useRef<HTMLDivElement>(null)
@@ -114,8 +115,38 @@ export function SftpPanel({ terminalId, onClose }: SftpPanelProps) {
         }
     }
 
+    const handleCrossServerTransfer = async (sourceId: string, sourcePath: string, fileName: string) => {
+        if (sourceId === terminalId) return // Don't transfer to self
+
+        setTransferring(true)
+        setError(null)
+        const remotePath = path === '.' ? fileName : `${path}/${fileName}`
+
+        try {
+            await window.ipcRenderer.sftpTransfer(sourceId, sourcePath, terminalId, remotePath)
+            await loadFiles(path)
+        } catch (err: any) {
+            setError(`Transfer failed: ${err.message}`)
+        } finally {
+            setTransferring(false)
+        }
+    }
+
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault()
+
+        // Check for cross-server transfer first
+        const sftpData = e.dataTransfer.getData('application/dassh-sftp-item')
+        if (sftpData) {
+            try {
+                const { sourceConnectionId, filePath, fileName } = JSON.parse(sftpData)
+                handleCrossServerTransfer(sourceConnectionId, filePath, fileName)
+                return
+            } catch (err) {
+                console.error('Failed to parse SFTP drag data', err)
+            }
+        }
+
         const files = Array.from(e.dataTransfer.files)
         files.forEach(handleUpload)
     }
@@ -162,6 +193,16 @@ export function SftpPanel({ terminalId, onClose }: SftpPanelProps) {
                                 e.preventDefault()
                                 setContextMenu({ x: e.clientX, y: e.clientY, file })
                             }}
+                            draggable={file.type === 'file'}
+                            onDragStart={(e) => {
+                                const filePath = path === '.' ? file.name : `${path}/${file.name}`
+                                e.dataTransfer.setData('application/dassh-sftp-item', JSON.stringify({
+                                    sourceConnectionId: terminalId,
+                                    filePath,
+                                    fileName: file.name
+                                }))
+                                e.dataTransfer.effectAllowed = 'copy'
+                            }}
                         >
                             <span className="file-icon">
                                 {file.type === 'directory' ? '📁' : '📄'}
@@ -172,6 +213,13 @@ export function SftpPanel({ terminalId, onClose }: SftpPanelProps) {
                     ))}
                 </div>
             </div>
+
+            {transferring && (
+                <div className="sftp-transfer-overlay">
+                    <div className="sftp-transfer-spinner"></div>
+                    <span>Transferring...</span>
+                </div>
+            )}
 
             {contextMenu && (
                 <div

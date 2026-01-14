@@ -70,6 +70,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     sftpUpload(id: string, localPath: string, remotePath: string) {
         return ipcRenderer.invoke('sftp:upload', { id, localPath, remotePath })
     },
+    sftpTransfer(sourceId: string, sourcePath: string, targetId: string, targetPath: string) {
+        return ipcRenderer.invoke('sftp:transfer', { sourceId, sourcePath, targetId, targetPath })
+    },
     getFilePath(file: File) {
         return webUtils.getPathForFile(file)
     }

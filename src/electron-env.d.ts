@@ -20,6 +20,7 @@ interface IpcRenderer {
     sftpDelete(id: string, path: string, isDirectory: boolean): Promise<boolean>
     sftpDownload(id: string, remotePath: string, localPath: string): Promise<boolean>
     sftpUpload(id: string, localPath: string, remotePath: string): Promise<boolean>
+    sftpTransfer(sourceId: string, sourcePath: string, targetId: string, targetPath: string): Promise<boolean>
     getFilePath(file: File): string
 }
 

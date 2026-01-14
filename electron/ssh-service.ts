@@ -1,6 +1,7 @@
 import { Client } from 'ssh2'
 import { readFile } from 'node:fs/promises'
 import { ipcMain, WebContents } from 'electron'
+import { pipeline } from 'node:stream/promises'
 
 export class SshService {
     private connections: Map<string, Client> = new Map()
@@ -84,6 +85,29 @@ export class SshService {
                     resolve(true)
                 })
             })
+        })
+
+        ipcMain.handle('sftp:transfer', async (_, { sourceId, sourcePath, targetId, targetPath }) => {
+            console.log(`[SFTP Transfer] Starting: ${sourceId}:${sourcePath} -> ${targetId}:${targetPath}`)
+            const sourceSftp = this.sftpSessions.get(sourceId)
+            const targetSftp = this.sftpSessions.get(targetId)
+
+            if (!sourceSftp || !targetSftp) {
+                console.error('[SFTP Transfer] Missing session:', { sourceSftp: !!sourceSftp, targetSftp: !!targetSftp })
+                throw new Error('SFTP session not found for one or both connections.')
+            }
+
+            try {
+                const readStream = sourceSftp.createReadStream(sourcePath)
+                const writeStream = targetSftp.createWriteStream(targetPath)
+
+                await pipeline(readStream, writeStream)
+                console.log('[SFTP Transfer] Completed successfully')
+                return true
+            } catch (err: any) {
+                console.error('[SFTP Transfer] Failed:', err.message)
+                throw err
+            }
         })
 
         ipcMain.on('ssh-input', (event, { id, data }) => {

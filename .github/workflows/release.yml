@@ -28,7 +28,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and Publish
-        run: npm run dist -- -p always
+      - name: Build
+        run: npm run dist -- -p never
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload binaries to release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist_apps/*.exe
+            dist_apps/*.dmg
+            dist_apps/*.AppImage
+            dist_apps/*.deb
+            dist_apps/*.zip
+            dist_apps/*.blockmap
+            dist_apps/*.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

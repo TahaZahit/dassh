@@ -1,7 +1,7 @@
 {
   "name": "dassh",
   "private": true,
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Premium SSH terminal orchestrator with multi-grid and private key support",
   "author": "Taha Zahit Hakyemez <tahazahit@gmail.com>",
   "main": "dist-electron/main.js",

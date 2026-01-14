@@ -16,6 +16,9 @@
 ## ✨ Features
 
 - **Multi-Terminal Grid:** Connect to multiple servers simultaneously in a responsive, high-performance terminal grid powered by `xterm.js`.
+- **SFTP File Manager:** Integrated SFTP client to browse, download, upload, and delete server files.
+- **Integrated Split-Pane:** A dedicated file explorer alongside every terminal window for per-server management.
+- **Cross-Server Transfer:** Direct server-to-server file transfer support by dragging items between panels.
 - **Global Orchestration:** Broadcast commands to all active terminals at once with the built-in command bar—perfect for batch updates and log tailing.
 - **Premium Zinc UI:** A sleek, dark-mode design system following premium aesthetic principles, featuring vibrancy effects on macOS and a curated Zinc palette.
 - **Advanced Authentication:** Full support for SSH Private Key authentication with a native file picker, alongside standard password-based login.

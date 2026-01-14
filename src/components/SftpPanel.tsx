@@ -20,7 +20,6 @@ export function SftpPanel({ terminalId, onClose }: SftpPanelProps) {
     const [transferring, setTransferring] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [contextMenu, setContextMenu] = useState<{ x: number, y: number, file: SftpFile } | null>(null)
-    const dropRef = useRef<HTMLDivElement>(null)
 
     const loadFiles = useCallback(async (targetPath: string) => {
         setLoading(true)

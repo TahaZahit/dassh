@@ -6,6 +6,7 @@ export interface ConnectedTerminal {
     serverId?: string // To track unique server instances
     config?: any      // Store config to defer connection
     connected?: boolean // Track if backend connection started
+    sftpOpen?: boolean  // Toggle state for SFTP panel
 }
 
 interface TerminalGridProps {
@@ -15,9 +16,10 @@ interface TerminalGridProps {
     onInput: (data: string) => void
     onClose: (id: string) => void
     onSized: (id: string, rows: number, cols: number) => void
+    onToggleSftp: (id: string) => void
 }
 
-export function TerminalGrid({ terminals, activeTerminalId, onActivate, onInput, onClose, onSized }: TerminalGridProps) {
+export function TerminalGrid({ terminals, activeTerminalId, onActivate, onInput, onClose, onSized, onToggleSftp }: TerminalGridProps) {
     // Basic CSS Grid layout logic
     return (
         <div className="terminal-grid-container"
@@ -43,26 +45,41 @@ export function TerminalGrid({ terminals, activeTerminalId, onActivate, onInput,
                         }}
                     >
                         <span style={{ fontWeight: 500 }}>{term.title}</span>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onClose(term.id)
-                            }}
-                            className="btn-icon btn-close"
-                        >
-                            ✕
-                        </button>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onToggleSftp(term.id)
+                                }}
+                                className={`btn-icon ${term.sftpOpen ? 'active' : ''}`}
+                                title="Toggle SFTP"
+                                style={{ fontSize: '10px', padding: '2px 4px' }}
+                            >
+                                SFTP
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onClose(term.id)
+                                }}
+                                className="btn-icon btn-close"
+                            >
+                                ✕
+                            </button>
+                        </div>
                     </div>
 
                     {/* Terminal Content */}
                     <div className="terminal-content">
                         <Terminal
                             id={term.id}
+                            sftpOpen={term.sftpOpen}
                             onInput={(data) => {
                                 onActivate(term.id) // Ensure we activate on input too
                                 onInput(data)
                             }}
                             onSized={(rows, cols) => onSized(term.id, rows, cols)}
+                            onCloseSftp={() => onToggleSftp(term.id)}
                         />
                     </div>
                 </div>

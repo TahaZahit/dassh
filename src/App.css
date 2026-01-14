@@ -1,1 +1,160 @@
 /* Cleared default styles */
+
+.terminal-split-wrapper {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.terminal-sftp-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-subtle);
+    background-color: var(--bg-panel);
+}
+
+.sftp-panel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    animation: slide-in-left 0.2s ease-out;
+}
+
+@keyframes slide-in-left {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.sftp-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.sftp-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    max-width: 160px;
+}
+
+.sftp-path {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.sftp-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.sftp-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.sftp-file-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.sftp-file-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+    transition: background 0.15s;
+}
+
+.sftp-file-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sftp-file-item .file-icon {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+.sftp-file-item .file-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sftp-file-item .file-size {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.sftp-loading,
+.sftp-error {
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.sftp-error {
+    color: #f87171;
+}
+
+.sftp-context-menu {
+    position: fixed;
+    background-color: #18181b;
+    /* Matches Zinc-900 */
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    padding: 6px;
+    z-index: 1000;
+    min-width: 140px;
+}
+
+.menu-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.menu-item:hover {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.menu-item.delete:hover {
+    background-color: #ef4444;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Terminal as XTerminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
+import { SftpPanel } from './SftpPanel'
 import 'xterm/css/xterm.css'
 
 interface TerminalProps {
@@ -8,9 +9,11 @@ interface TerminalProps {
     onInput: (data: string) => void
     onMount?: () => void
     onSized?: (rows: number, cols: number) => void
+    sftpOpen?: boolean
+    onCloseSftp?: () => void
 }
 
-export function Terminal({ id, onInput, onMount, onSized }: TerminalProps) {
+export function Terminal({ id, onInput, onMount, onSized, sftpOpen, onCloseSftp }: TerminalProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const hasSizedRef = useRef(false)
     const onSizedRef = useRef(onSized)
@@ -109,5 +112,17 @@ export function Terminal({ id, onInput, onMount, onSized }: TerminalProps) {
         }
     }, [id])
 
-    return <div className="terminal-container" ref={containerRef} />
+    return (
+        <div className="terminal-split-wrapper">
+            {sftpOpen && (
+                <div className="terminal-sftp-sidebar">
+                    <SftpPanel
+                        terminalId={id}
+                        onClose={onCloseSftp || (() => { })}
+                    />
+                </div>
+            )}
+            <div className="terminal-container" ref={containerRef} />
+        </div>
+    )
 }

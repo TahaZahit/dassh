@@ -4,6 +4,7 @@ import { ipcMain, WebContents } from 'electron'
 
 export class SshService {
     private connections: Map<string, Client> = new Map()
+    private sftpSessions: Map<string, any> = new Map()
 
     constructor() {
         this.setupIpcHandlers()
@@ -12,6 +13,77 @@ export class SshService {
     private setupIpcHandlers() {
         ipcMain.handle('ssh-connect', async (event, { id, config, dimensions }) => {
             return this.createConnection(id, config, event.sender, dimensions)
+        })
+
+        ipcMain.handle('sftp:list-files', async (_, { id, path }) => {
+            const sftp = this.sftpSessions.get(id)
+            if (!sftp) throw new Error('SFTP session not found')
+
+            return new Promise((resolve, reject) => {
+                sftp.readdir(path, (err: any, list: any[]) => {
+                    if (err) return reject(err)
+                    resolve(list.map(item => ({
+                        name: item.filename,
+                        size: item.attrs.size,
+                        type: item.longname.startsWith('d') ? 'directory' : 'file',
+                        permissions: item.attrs.permissions,
+                        mtime: item.attrs.mtime
+                    })))
+                })
+            })
+        })
+
+        ipcMain.handle('sftp:mkdir', async (_, { id, path }) => {
+            const sftp = this.sftpSessions.get(id)
+            if (!sftp) throw new Error('SFTP session not found')
+
+            return new Promise((resolve, reject) => {
+                sftp.mkdir(path, (err: any) => {
+                    if (err) return reject(err)
+                    resolve(true)
+                })
+            })
+        })
+
+        ipcMain.handle('sftp:delete', async (_, { id, path, isDirectory }) => {
+            const sftp = this.sftpSessions.get(id)
+            if (!sftp) throw new Error('SFTP session not found')
+
+            return new Promise((resolve, reject) => {
+                const callback = (err: any) => {
+                    if (err) return reject(err)
+                    resolve(true)
+                }
+                if (isDirectory) {
+                    sftp.rmdir(path, callback)
+                } else {
+                    sftp.unlink(path, callback)
+                }
+            })
+        })
+
+        ipcMain.handle('sftp:download', async (_, { id, remotePath, localPath }) => {
+            const sftp = this.sftpSessions.get(id)
+            if (!sftp) throw new Error('SFTP session not found')
+
+            return new Promise((resolve, reject) => {
+                sftp.fastGet(remotePath, localPath, (err: any) => {
+                    if (err) return reject(err)
+                    resolve(true)
+                })
+            })
+        })
+
+        ipcMain.handle('sftp:upload', async (_, { id, localPath, remotePath }) => {
+            const sftp = this.sftpSessions.get(id)
+            if (!sftp) throw new Error('SFTP session not found')
+
+            return new Promise((resolve, reject) => {
+                sftp.fastPut(localPath, remotePath, (err: any) => {
+                    if (err) return reject(err)
+                    resolve(true)
+                })
+            })
         })
 
         ipcMain.on('ssh-input', (event, { id, data }) => {
@@ -80,6 +152,16 @@ export class SshService {
                     })
 
                     resolve(true)
+
+                    // Automatically start SFTP session
+                    conn.sftp((err, sftp) => {
+                        if (err) {
+                            sendLog(`\x1b[1;31mError:\x1b[0m Failed to start SFTP: ${err.message}`)
+                            return
+                        }
+                        this.sftpSessions.set(id, sftp)
+                        sendLog('SFTP session initialized.')
+                    })
                 })
             })
 
@@ -137,5 +219,6 @@ export class SshService {
             conn.end()
             this.connections.delete(id)
         }
+        this.sftpSessions.delete(id)
     }
 }

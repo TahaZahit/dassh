@@ -80,6 +80,26 @@ ipcMain.handle('select-file', async () => {
     return filePaths[0]
 })
 
+ipcMain.handle('save-file', async (_, defaultPath) => {
+    if (!win) return null
+    const { canceled, filePath } = await dialog.showSaveDialog(win, {
+        defaultPath,
+        title: 'Save File'
+    })
+    if (canceled) return null
+    return filePath
+})
+
+ipcMain.handle('select-folder', async () => {
+    if (!win) return null
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, {
+        properties: ['openDirectory'],
+        title: 'Select Folder'
+    })
+    if (canceled) return null
+    return filePaths[0]
+})
+
 ipcMain.handle('servers-save', async (_, servers) => {
     await fs.writeFile(SERVERS_FILE, JSON.stringify(servers, null, 2), 'utf-8')
     return true

@@ -1,4 +1,4 @@
-import { ipcRenderer, contextBridge } from 'electron'
+import { ipcRenderer, contextBridge, webUtils } from 'electron'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -48,5 +48,29 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     },
     selectFile() {
         return ipcRenderer.invoke('select-file')
+    },
+    saveFile(defaultPath?: string) {
+        return ipcRenderer.invoke('save-file', defaultPath)
+    },
+    selectFolder() {
+        return ipcRenderer.invoke('select-folder')
+    },
+    sftpListFiles(id: string, path: string) {
+        return ipcRenderer.invoke('sftp:list-files', { id, path })
+    },
+    sftpMkdir(id: string, path: string) {
+        return ipcRenderer.invoke('sftp:mkdir', { id, path })
+    },
+    sftpDelete(id: string, path: string, isDirectory: boolean) {
+        return ipcRenderer.invoke('sftp:delete', { id, path, isDirectory })
+    },
+    sftpDownload(id: string, remotePath: string, localPath: string) {
+        return ipcRenderer.invoke('sftp:download', { id, remotePath, localPath })
+    },
+    sftpUpload(id: string, localPath: string, remotePath: string) {
+        return ipcRenderer.invoke('sftp:upload', { id, localPath, remotePath })
+    },
+    getFilePath(file: File) {
+        return webUtils.getPathForFile(file)
     }
 })

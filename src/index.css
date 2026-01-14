@@ -114,6 +114,13 @@ button {
   gap: 16px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+}
+
 .brand-logo-img {
   height: 20px;
   width: auto;
@@ -390,9 +397,39 @@ button {
   color: var(--text-primary);
 }
 
+.btn-icon.active {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
 .btn-close:hover {
   background-color: rgba(239, 68, 68, 0.2);
   color: #ef4444;
+}
+
+.btn-toolbar {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-toolbar:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+}
+
+.btn-toolbar.active {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
 }
 
 /* Toggle Switch */

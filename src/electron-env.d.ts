@@ -13,6 +13,14 @@ interface IpcRenderer {
     loadServers(): Promise<any[]>
     saveServers(servers: any[]): Promise<boolean>
     selectFile(): Promise<string | null>
+    saveFile(defaultPath?: string): Promise<string | null>
+    selectFolder(): Promise<string | null>
+    sftpListFiles(id: string, path: string): Promise<any[]>
+    sftpMkdir(id: string, path: string): Promise<boolean>
+    sftpDelete(id: string, path: string, isDirectory: boolean): Promise<boolean>
+    sftpDownload(id: string, remotePath: string, localPath: string): Promise<boolean>
+    sftpUpload(id: string, localPath: string, remotePath: string): Promise<boolean>
+    getFilePath(file: File): string
 }
 
 declare global {

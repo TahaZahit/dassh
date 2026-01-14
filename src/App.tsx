@@ -182,6 +182,10 @@ function App() {
     })
   }, [])
 
+  const handleToggleSftp = (id: string) => {
+    setTerminals(prev => prev.map(t => t.id === id ? { ...t, sftpOpen: !t.sftpOpen } : t))
+  }
+
   return (
     <div className={`app-container ${window.navigator.userAgent.includes('Mac') ? 'is-mac' : 'is-not-mac'}`}>
       {/* Header / Toolbar */}
@@ -197,8 +201,10 @@ function App() {
         </div>
 
         {/* Right side toolbar items if needed */}
-        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-          {activeTerminalId ? 'Terminal Active' : 'No Active Terminal'}
+        <div className="header-right">
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+            {activeTerminalId ? 'Terminal Active' : 'No Active Terminal'}
+          </div>
         </div>
       </header>
 
@@ -232,6 +238,7 @@ function App() {
               onInput={handleInput}
               onClose={handleCloseTerminal}
               onSized={handleTerminalSized}
+              onToggleSftp={handleToggleSftp}
             />
 
             {/* Global Command Bar */}
